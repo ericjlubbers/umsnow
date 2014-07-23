@@ -13,6 +13,8 @@ if(!function_exists('get_my_date')) {
 	}
 }
 
+
+
 foreach ($data->events as $event) {
 	echo "\n";
 	echo $event->venue->name;

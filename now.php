@@ -1,39 +1,75 @@
 <?php
 
+date_default_timezone_set('America/Denver');
+
+if ( !class_exists('ftp') ) {
+	require('/var/www/lib/class.ftp.php');
+}
+
+$ftp_error_display = TRUE;
+$ftp_directory_local = '/var/www/vhosts/denverpostplus.com/httpdocs/ums';
+$ftp_directory_remote = '';
+$ftp_file_format = '';
+$ftp_file_mode = FTP_ASCII;
+
 $json = file_get_contents('http://www.ticketfly.com/api/events/upcoming.json?orgId=1075&maxResults=200&pageNum=0'); 
 $data = json_decode($json);
-// var_dump($data->events[1]);
-		date_default_timezone_set('America/Denver');
+$file_name = 'ums-upcoming.json';
+$show_list = array();
+$final_list = array();
+$i=0;
 
 if(!function_exists('get_my_date')) {
 	function get_my_date($date_in) {
-		date_default_timezone_set('America/Denver');
-		$date_out = date_create_from_format('Y-m-d H:i:s',$date_in);
-		$flag = 'now';
-		$date_out = date_format($date_out,'g:ia n/d');
+		$event_time = strtotime($date_in);
+		$current_time = time();
+		$time_diff = $event_time - $current_time;
+		if ($time_diff < 3500) {
+			$flag = 'now';
+		} else {
+			$flag = 'next';
+		}
+		$date_out = date('g:ia n/d',$event_time);
 		$return = array($date_out,$flag);
 		return $return;
 	}
 }
-$show_list = array();
-$i=0;
+
+function get_new_keys($inputarray) {
+	$newarray = array();
+	$ii=0;
+	foreach($inputarray as $inarray) {
+		if ($ii < 2) {
+			$newarray[$ii]['name'] = $inarray['name'];
+			$newarray[$ii]['time'] = $inarray['time'];
+			$newarray[$ii]['flag'] = $inarray['flag'];
+			$ii++;
+		}
+	}
+	return $newarray;
+}
 
 foreach ($data->events as $event) {
-	echo "\n";
-	echo $event->venue->name;
-	echo "\n";
-	echo $event->headlinersName;
-	echo "\n";$event->venue->name;
 	$starttime = $event->startDate;
 	$eventtime = get_my_date($starttime);
-	echo $eventtime[0];
-	echo "\n\n";
 	$show_list[$event->venue->name][$i]['name'] = $event->headlinersName;
 	$show_list[$event->venue->name][$i]['time'] = $eventtime[0];
 	$show_list[$event->venue->name][$i]['flag'] = $eventtime[1];
 	$i++;
-	var_dump($show_list);
-	die;
 }
+
+foreach($show_list as $venuekey => $venueitem) {
+	if ($venuekey !== 'The UMS Box Office') {
+		$final_list[$venuekey] = get_new_keys($venueitem);
+	}
+}
+
+$filestring = json_encode($final_list);
+file_put_contents($file_name, $filestring);
+
+$ftp = new ftp();
+$ftp->connection_passive();
+$ftp->file_put($file_name, $ftp_directory_local, $ftp_file_format, $ftp_error_display, $ftp_file_mode, $ftp_directory_remote);
+$ftp->ftp_connection_close();
 
 ?>

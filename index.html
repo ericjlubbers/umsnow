@@ -34,6 +34,7 @@
 <link rel="stylesheet" href="http://extras.denverpost.com/umsnow/css/foundation.css" />
 <link href='http://fonts.googleapis.com/css?family=Londrina+Solid|Open+Sans+Condensed:300,700' rel='stylesheet' type='text/css'>
 
+<script type="text/javascript" src="http://extras.denverpost.com/media/js/jquery-min.js"></script>
 <script src="http://extras.denverpost.com/umsnow/js/vendor/modernizr.js"></script>   
 <script type = "text/javascript" src = "//local.digitalfirstmedia.com/common/dfm/assets/js/dfm-core-level1.js" > </script>
 
@@ -240,20 +241,7 @@
     <p>UP NEXT</p>
   </div>
 </div>
-<!-- ROW 1 FORMAT -->
-<div class="row" data-equalizer data-equalizer>
-  <div class="small-4 panel row1 columns" data-equalizer-watch>
-    <p><a href="http://maps.google.com/maps?daddr=60%20S%20Broadway%2C%20Denver%2C%20CO%2080207"><strong>3 Kings Tavern</strong></a></p>
-  </div>
-  <div class="small-4 panel row1 columns" data-equalizer-watch>
-    <p><strong>[-V01T1-]</strong>: [-V01B1-]</p>
-  </div>
-  <div class="small-4 panel row1 columns end" data-equalizer-watch>
-    <p><strong>[-V01T2-]</strong>: [-V01B2-]</p>
-  </div>
-</div>
-
-
+<div id="addtheschedule"></div>
 <!-- FOOTER -->
 <div class="row" data-equalizer >
   <div class="small-12 medium-12 large-12 columns" style="background:#333333;">
@@ -264,13 +252,32 @@
 
 <!-- SCRIPT -->
 <script type="text/javascript">
- function parseEvents() {
-        / / live updates from feed parse
-$.getJSON('http://extras.denverpost.com/cache/ums-upcoming.json', function(data) {
-        //change possession arrow
-        console.log(data);
+function isEven(n) {
+   return /^-?\d*[02468]$/.test(n);
+}
+function parseEvents() {
+    //live updates from feed parse
+    $.getJSON('../cache/ums-upcoming.json', function(data) {
+        var i = 0;
+        var names = Object.keys(data);
+        console.log(data[names[i]]);
+        $.each(data, function() {
+            if (isEven(i)) { var rowClass = ' row2'; } else { var rowClass = ' row1'; }
+            if (data[names[i]][0]["flag"] == 'now') {
+                var nowRow = '<div class="small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>' + data[names[i]][0]["time"] + '</strong>: ' + data[names[i]][0]["name"] + '</p></div>'
+                var nextRow = '<div class="small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>' + data[names[i]][1]["time"] + '</strong>: ' + data[names[i]][1]["name"] + '</p></div>'
+            } else {
+                var nowRow = '<div class="small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>-</strong></p></div>'
+                var nextRow = '<div class="small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>' + data[names[i]][0]["time"] + '</strong>: ' + data[names[i]][0]["name"] + '</p></div>'
+            }
+            $('#addtheschedule').append('<div class="row" data-equalizer data-equalizer> \n\
+                <div class="small-4 panel' + rowClass + '  columns" data-equalizer-watch> \n\
+                    <p><strong>' + names[i] + '</strong></p> \n\
+                </div>' + nowRow + nextRow + '</div>');
+            i++;
+        });
         // if (data["team-sport-content"]["league-content"]["competition"]["competition-state"]);
-    }
+    });
 }
 parseEvents();
 </script>

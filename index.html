@@ -229,26 +229,26 @@
 </div>
 
 <!-- HEADER -->
-<div class="row" data-equalizer >
+<div class="row">
   <div class="small-12 medium-12 large-12 columns" style="background:#333333;">
     <h1 class="title"><a href="http://theums.com" style="color:#00b0ad;">UMS</a> Right Now</h1>
   </div>
 </div>
 <!-- TOP ROW -->
-<div class="row" data-equalizer data-equalizer>
-  <div class="small-4 panel blue columns" data-equalizer-watch>
+<div class="row" data-equalizer data-options="equalize_on_stack: true">
+  <div class="large-4 medium-4 small-4 panel blue columns" data-equalizer-watch>
     <p>VENUE</p>
   </div>
-  <div class="small-4 panel salmon columns" data-equalizer-watch>
+  <div class="large-4 medium-4 small-4 panel salmon columns" data-equalizer-watch>
     <p>NOW</p>
   </div>
-    <div class="small-4 panel blue columns end" data-equalizer-watch>
+    <div class="large-4 medium-4 small-4 panel blue columns end" data-equalizer-watch>
     <p>UP NEXT</p>
   </div>
 </div>
-<div id="addtheschedule"></div>
+<span id="addtheschedule"></span>
 <!-- FOOTER -->
-<div class="row" data-equalizer >
+<div class="row">
   <div class="small-12 medium-12 large-12 columns" style="background:#333333;">
     <h1 class="title2">GET THE APP:</h1>
     <h1 class="title2"><a href="http://dpo.st/UMSi">iOS</a>, <a href="http://dpo.st/UMSa">Android</a></h1>
@@ -258,11 +258,7 @@
 <!-- SCRIPT -->
 
 <script src="js/vendor/jquery.js"></script>
-<script src="js/foundation.min.js"></script>
-<script src="js/foundation/foundation.equalizer.js"></script>
-<script>
-    $(document).foundation();
-</script>
+
 <script type="text/javascript">
 function isEven(n) {
    return /^-?\d*[02468]$/.test(n);
@@ -272,26 +268,29 @@ function parseEvents() {
     $.getJSON('../cache/ums-upcoming.json', function(data) {
         var i = 0;
         var names = Object.keys(data);
-        console.log(data[names[i]]);
         $.each(data, function() {
             if (isEven(i)) { var rowClass = ' row2'; } else { var rowClass = ' row1'; }
             if (data[names[i]][0]["flag"] == 'now') {
-                var nowRow = '<div class="small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>' + data[names[i]][0]["time"] + '</strong>: ' + data[names[i]][0]["name"] + '</p></div>'
-                var nextRow = '<div class="small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>' + data[names[i]][1]["time"] + '</strong>: ' + data[names[i]][1]["name"] + '</p></div>'
+                var nowRow = '<div class="large-4 medium-4 small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>' + data[names[i]][0]["time"] + '</strong>: ' + data[names[i]][0]["name"] + '</p></div>';
+                var nextRow = '<div class="large-4 medium-4 small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>' + data[names[i]][1]["time"] + '</strong>: ' + data[names[i]][1]["name"] + '</p></div>';
             } else {
-                var nowRow = '<div class="small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>-</strong></p></div>'
-                var nextRow = '<div class="small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>' + data[names[i]][0]["time"] + '</strong>: ' + data[names[i]][0]["name"] + '</p></div>'
+                var nowRow = '<div class="large-4 medium-4 small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>-</strong></p></div>';
+                var nextRow = '<div class="large-4 medium-4 small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>' + data[names[i]][0]["time"] + '</strong>: ' + data[names[i]][0]["name"] + '</p></div>';
             }
-            $('#addtheschedule').append('<div class="row" data-equalizer> \n\
-                <div class="small-4 panel' + rowClass + '  columns" data-equalizer-watch> \n\
-                    <p><strong>' + names[i] + '</strong></p> \n\
-                </div>' + nowRow + nextRow + '</div>');
+            $('#addtheschedule').append('<div class="row" data-equalizer data-options="equalize_on_stack: true"><div class="large-4 medium-4 small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>' + names[i] + '</strong></p></div>' + nowRow + nextRow + '</div>');
             i++;
         });
-        // if (data["team-sport-content"]["league-content"]["competition"]["competition-state"]);
+        $('#addtheschedule').append('<div id="lastdiv"></div>');
     });
 }
 parseEvents();
+</script>
+
+<script src="js/foundation/foundation.js"></script>
+<script src="js/foundation/foundation.equalizer.js"></script>
+<script type="text/javascript">
+$(document).foundation();
+var waitafew = setTimeout(function(){$(document).foundation('equalizer','reflow')}, 250);
 </script>
 
 <script type="text/javascript">

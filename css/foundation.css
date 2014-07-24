@@ -10,6 +10,16 @@ h1.title {
   color: #ffffff;
 }
 
+h1.title2 {
+  font-family: 'Londrina Solid', sans-serif;
+  text-align: center;
+  font-size: 2em;
+  margin-top:0px;
+  padding-top:0px;
+  margin-bottom:6px;
+  color: #ffffff;
+}
+
 p.gridlabel {
   font-family: 'Londrina Solid', sans-serif;
   color: #ffffff;

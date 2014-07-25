@@ -2,15 +2,16 @@
 
 date_default_timezone_set('America/Denver');
 
-if ( !class_exists('ftp') ) {
-	require('/var/www/lib/class.ftp.php');
+if ($argv[1] != 'local') {
+	if ( !class_exists('ftp') ) {
+		require('/var/www/lib/class.ftp.php');
+	}
+	$ftp_error_display = TRUE;
+	$ftp_directory_local = '/var/www/vhosts/denverpostplus.com/httpdocs/ums';
+	$ftp_directory_remote = '';
+	$ftp_file_format = '';
+	$ftp_file_mode = FTP_ASCII;
 }
-
-$ftp_error_display = TRUE;
-$ftp_directory_local = '/var/www/vhosts/denverpostplus.com/httpdocs/ums';
-$ftp_directory_remote = '';
-$ftp_file_format = '';
-$ftp_file_mode = FTP_ASCII;
 
 $json = file_get_contents('http://www.ticketfly.com/api/events/upcoming.json?orgId=1075&maxResults=200&pageNum=0'); 
 $data = json_decode($json);
@@ -67,9 +68,10 @@ foreach($show_list as $venuekey => $venueitem) {
 $filestring = json_encode($final_list);
 file_put_contents($file_name, $filestring);
 
-$ftp = new ftp();
-$ftp->connection_passive();
-$ftp->file_put($file_name, $ftp_directory_local, $ftp_file_format, $ftp_error_display, $ftp_file_mode, $ftp_directory_remote);
-$ftp->ftp_connection_close();
-
+if ($argv[1] != 'local') {
+	$ftp = new ftp();
+	$ftp->connection_passive();
+	$ftp->file_put($file_name, $ftp_directory_local, $ftp_file_format, $ftp_error_display, $ftp_file_mode, $ftp_directory_remote);
+	$ftp->ftp_connection_close();
+}
 ?>

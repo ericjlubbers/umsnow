@@ -271,10 +271,15 @@ function parseEvents() {
         $.each(data, function() {
             if (isEven(i)) { var rowClass = ' row2'; } else { var rowClass = ' row1'; }
             if (data[names[i]][0]["flag"] == 'now') {
+                console.log(data[names[i]]);
                 var nowRow = '<div class="large-4 medium-4 small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>' + data[names[i]][0]["time"] + '</strong>: ' + data[names[i]][0]["name"] + '</p></div>';
-                var nextRow = '<div class="large-4 medium-4 small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>' + data[names[i]][1]["time"] + '</strong>: ' + data[names[i]][1]["name"] + '</p></div>';
+                if (typeof(data[names[i]][1]) != 'undefined') {
+                    var nextRow = '<div class="large-4 medium-4 small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>' + data[names[i]][1]["time"] + '</strong>: ' + data[names[i]][1]["name"] + '</p></div>';
+                } else {
+                    var nextRow = '<div class="large-4 medium-4 small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong></strong></p></div>';
+                }
             } else {
-                var nowRow = '<div class="large-4 medium-4 small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>-</strong></p></div>';
+                var nowRow = '<div class="large-4 medium-4 small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong></strong></p></div>';
                 var nextRow = '<div class="large-4 medium-4 small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>' + data[names[i]][0]["time"] + '</strong>: ' + data[names[i]][0]["name"] + '</p></div>';
             }
             $('#addtheschedule').append('<div class="row" data-equalizer data-options="equalize_on_stack: true"><div class="large-4 medium-4 small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>' + names[i] + '</strong></p></div>' + nowRow + nextRow + '</div>');

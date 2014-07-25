@@ -272,11 +272,9 @@ function parseEvents() {
             if (isEven(i)) { var rowClass = ' row2'; } else { var rowClass = ' row1'; }
             var t = 0;
             $.each(data[names[i]], function() {
-                console.log(data[names[i]][t]["flag"]);
                 if (typeof(data[names[i]][t]) != 'undefined' && data[names[i]][t]["flag"] == 'past') {
                     t++;
                 }
-                console.log(t);
             });
             var tt = t + 1;
             if (typeof(data[names[i]][t]) != 'undefined' || typeof(data[names[i]][tt]) != 'undefined') {

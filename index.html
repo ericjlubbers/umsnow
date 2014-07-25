@@ -279,7 +279,6 @@ function parseEvents() {
             var tt = t + 1;
             if (typeof(data[names[i]][t]) != 'undefined' || typeof(data[names[i]][tt]) != 'undefined') {
                 if (typeof(data[names[i]][t]) != 'undefined' && data[names[i]][t]["flag"] == 'now') {
-                    console.log(data[names[i]]);
                     var nowRow = '<div class="large-4 medium-4 small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>' + data[names[i]][t]["time"] + '</strong>: ' + data[names[i]][t]["name"] + '</p></div>';
                     if (typeof(data[names[i]][tt]) != 'undefined') {
                         var nextRow = '<div class="large-4 medium-4 small-4 panel' + rowClass + ' columns" data-equalizer-watch><p><strong>' + data[names[i]][tt]["time"] + '</strong>: ' + data[names[i]][tt]["name"] + '</p></div>';

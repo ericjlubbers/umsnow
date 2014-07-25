@@ -1,6 +1,6 @@
 <?php
 
-echo 'version 1.1.3';
+echo "\n" . 'version 1.1.4' . "\n\n";
 
 date_default_timezone_set('America/Denver');
 
@@ -32,8 +32,10 @@ if(!function_exists('get_my_date')) {
 			$flag = 'past';
 		} else if ($time_diff > -3500 && $time_diff < 0) {
 			$flag = 'now';
-		} else {
+		} else if ($time_diff > 1 && $time_diff < 64000) {
 			$flag = 'next';
+		} else {
+			return false;
 		}
 		$date_out = date('g:ia n/d',$event_time);
 		//echo $time_diff . "\n";
@@ -59,11 +61,12 @@ function get_new_keys($inputarray) {
 
 foreach ($data->events as $event) {
 	$starttime = $event->startDate;
-	$eventtime = get_my_date($starttime);
-	$show_list[$event->venue->name][$i]['name'] = $event->headlinersName;
-	$show_list[$event->venue->name][$i]['time'] = $eventtime[0];
-	$show_list[$event->venue->name][$i]['flag'] = $eventtime[1];
-	$i++;
+	if ($eventtime = get_my_date($starttime) ) {
+		$show_list[$event->venue->name][$i]['name'] = $event->headlinersName;
+		$show_list[$event->venue->name][$i]['time'] = $eventtime[0];
+		$show_list[$event->venue->name][$i]['flag'] = $eventtime[1];
+		$i++;
+	}
 }
 
 foreach($show_list as $venuekey => $venueitem) {

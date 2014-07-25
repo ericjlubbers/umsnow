@@ -24,13 +24,20 @@ if(!function_exists('get_my_date')) {
 	function get_my_date($date_in) {
 		$event_time = strtotime($date_in);
 		$current_time = time();
+		//$current_time = 1406334600;
 		$time_diff = $event_time - $current_time;
-		if ($time_diff < 3500) {
+		if ($time_diff < -3500) {
+			$flag = 'past';
+		} else if ($time_diff > -3500 && $time_diff < 0) {
 			$flag = 'now';
 		} else {
 			$flag = 'next';
 		}
 		$date_out = date('g:ia n/d',$event_time);
+		//echo $time_diff . "\n";
+		//echo $date_out . "\n";
+		//echo $flag . "\n";
+		//echo "\n";
 		$return = array($date_out,$flag);
 		return $return;
 	}
@@ -40,12 +47,10 @@ function get_new_keys($inputarray) {
 	$newarray = array();
 	$ii=0;
 	foreach($inputarray as $inarray) {
-		if ($ii < 2) {
-			$newarray[$ii]['name'] = $inarray['name'];
-			$newarray[$ii]['time'] = $inarray['time'];
-			$newarray[$ii]['flag'] = $inarray['flag'];
-			$ii++;
-		}
+		$newarray[$ii]['name'] = $inarray['name'];
+		$newarray[$ii]['time'] = $inarray['time'];
+		$newarray[$ii]['flag'] = $inarray['flag'];
+		$ii++;
 	}
 	return $newarray;
 }

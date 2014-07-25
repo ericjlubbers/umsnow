@@ -1,5 +1,7 @@
 <?php
 
+echo 'version 1.1.3';
+
 date_default_timezone_set('America/Denver');
 
 if ($argv[1] != 'local') {
